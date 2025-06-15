@@ -78,50 +78,40 @@ fun SigninContent(
 
     LoadingDialog(isLoading = state.isLoading)
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize().padding(top = 10.dp),
-//        topBar = {
-//            TopAppBar(
-//                title = { Text("Sign In") }
-//            )
-//        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = 24.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Username") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { onSignIn(username, password) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.isLoading
         ) {
-            OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Username") },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Text("Sign In")
+        }
+
+        state.error?.let {
             Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password") },
-                modifier = Modifier.fillMaxWidth(),
-                visualTransformation = PasswordVisualTransformation()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { onSignIn(username, password) },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !state.isLoading
-            ) {
-                Text("Sign In")
-            }
-
-            state.error?.let {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(text = it, color = Color.Red)
-            }
+            Text(text = it, color = Color.Red)
         }
     }
 }

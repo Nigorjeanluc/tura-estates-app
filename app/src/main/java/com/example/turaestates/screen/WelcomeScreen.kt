@@ -4,13 +4,16 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,38 +80,61 @@ fun WelcomeScreen(
 
 @Composable
 fun PagerScreen(onBoardingPage: OnBoardingPage) {
+    val darktheme = isSystemInDarkTheme()
+    val backgroundBrush = if (darktheme) {
+        Brush.horizontalGradient(
+            colors = listOf(Color(0xFF434343),  Color(0xFF000000)) // Adjusted dark gradient
+        )
+    } else {
+        Brush.horizontalGradient(
+            colors = listOf(Color(0xFFFDFCFB), Color(0xFFE2D1C3))
+        )
+    }
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
             modifier = Modifier
-                .fillMaxWidth(0.5f)
-                .fillMaxHeight(0.7f),
+                .fillMaxWidth()
+                .weight(1f),
+            contentScale = ContentScale.Crop,
             painter = painterResource(id = onBoardingPage.image),
             contentDescription = "Pager Image"
         )
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = onBoardingPage.title,
-            fontSize = MaterialTheme.typography.headlineLarge.fontSize,
-            fontWeight = MaterialTheme.typography.headlineLarge.fontWeight,
-            textAlign = TextAlign.Center,
-            lineHeight = MaterialTheme.typography.headlineLarge.lineHeight,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Text(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 40.dp)
-                .padding(top = 20.dp),
-            text = onBoardingPage.description,
-            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+                .offset(y =  -30.dp)
+                .background(brush = backgroundBrush, shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .padding(
+                    horizontal = 24.dp,
+                    vertical = 28.dp
+                ).weight(0.4f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = onBoardingPage.title,
+                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                fontWeight = MaterialTheme.typography.headlineLarge.fontWeight,
+                textAlign = TextAlign.Center,
+                lineHeight = MaterialTheme.typography.headlineLarge.lineHeight,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 40.dp)
+                    .padding(top = 20.dp),
+                text = onBoardingPage.description,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
 }
 

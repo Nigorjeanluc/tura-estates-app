@@ -52,7 +52,7 @@ private val LightColorScheme = lightColorScheme(
     onBackground = Color(0xFF1C1B1F), // Dark color for text on light background
     onSurface = Color(0xFF1C1B1F),   // Dark color for text on light surface
     surfaceVariant = Color(0xFFE7E0EC),
-    onSurfaceVariant = Color(0xFF49454F)
+    onSurfaceVariant = Color(0xFF49454F),
 )
 
 // Define your gradients
