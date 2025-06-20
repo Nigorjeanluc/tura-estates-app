@@ -50,12 +50,12 @@ fun WelcomeScreen(
 
     TuraEstatesTheme {
         Column(
-            modifier = Modifier.fillMaxSize().background(Color.Transparent)
+            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
         ) {
             HorizontalPager(
                 modifier = Modifier.weight(10f),
                 state = pagerState,
-                count = 3,
+                count = pages.size,
                 verticalAlignment = Alignment.Top,
             ) {
                     position ->
@@ -66,6 +66,8 @@ fun WelcomeScreen(
                     .align(Alignment.CenterHorizontally)
                     .weight(1f),
                 pagerState = pagerState,
+                inactiveColor = MaterialTheme.colorScheme.secondary,
+                activeColor = MaterialTheme.colorScheme.primary
             )
             FinishButton(
                 modifier = Modifier.weight(1f),
@@ -80,16 +82,16 @@ fun WelcomeScreen(
 
 @Composable
 fun PagerScreen(onBoardingPage: OnBoardingPage) {
-    val darktheme = isSystemInDarkTheme()
-    val backgroundBrush = if (darktheme) {
-        Brush.horizontalGradient(
-            colors = listOf(Color(0xFF434343),  Color(0xFF000000)) // Adjusted dark gradient
-        )
-    } else {
-        Brush.horizontalGradient(
-            colors = listOf(Color(0xFFFDFCFB), Color(0xFFE2D1C3))
-        )
-    }
+//    val darktheme = isSystemInDarkTheme()
+//    val backgroundBrush = if (darktheme) {
+//        Brush.horizontalGradient(
+//            colors = listOf(Color(0xFF434343),  Color(0xFF000000)) // Adjusted dark gradient
+//        )
+//    } else {
+//        Brush.horizontalGradient(
+//            colors = listOf(Color(0xFFFDFCFB), Color(0xFFE2D1C3))
+//        )
+//    }
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -107,10 +109,17 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
             modifier = Modifier
                 .fillMaxWidth()
                 .offset(y =  -30.dp)
-                .background(brush = backgroundBrush, shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .background(
+                    color = MaterialTheme.colorScheme.background,
+                    shape = RoundedCornerShape(
+                        topStart = 32.dp,
+                        topEnd = 32.dp
+                    )
+                )
                 .padding(
-                    horizontal = 24.dp,
-                    vertical = 28.dp
+                    start = 24.dp,
+                    top = 28.dp,
+                    end = 24.dp
                 ).weight(0.4f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
