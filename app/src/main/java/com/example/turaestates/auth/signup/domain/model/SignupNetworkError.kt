@@ -1,6 +1,6 @@
-package com.example.turaestates.auth.signin.domain.model
+package com.example.turaestates.auth.signup.domain.model
 
-data class SigninNetworkError (
+data class SignupNetworkError (
     val error: ApiError,
     val t: Throwable? = null
 )

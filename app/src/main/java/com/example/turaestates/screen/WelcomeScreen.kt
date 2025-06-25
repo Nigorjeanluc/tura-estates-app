@@ -74,7 +74,7 @@ fun WelcomeScreen(
                 pagerState = pagerState
             ) {
                 navController.popBackStack()
-                navController.navigate(Screen.SignIn.route)
+                navController.navigate(Screen.SignUp.route)
             }
         }
     }
@@ -170,7 +170,7 @@ fun FinishButton(
                     contentColor = Color.White
                 )
             ) {
-                Text(text = "Finish")
+                Text(text = "Get Started")
             }
         }
     }
