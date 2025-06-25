@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
+import com.example.turaestates.auth.signin.domain.model.ApiError
 import com.example.turaestates.auth.signin.domain.model.SigninNetworkError
 import com.example.turaestates.auth.signin.domain.model.SigninResponse
 import com.example.turaestates.auth.signin.domain.repository.SigninRepository
@@ -34,7 +35,7 @@ class SigninViewModel @Inject constructor(
             when (result) {
                 is Either.Right -> {
                     val response = result.value
-                    Log.d("SigninViewModel", "Response: $response")
+
                     _state.update {
                         it.copy(signinResponse = response, navigateToHome = true)
                     }
@@ -42,10 +43,15 @@ class SigninViewModel @Inject constructor(
 
                 is Either.Left -> {
                     val failure = result.value
-                    _state.update {
-                        it.copy(error = failure.error.message)
+                    val userMessage = when (failure.error) {
+                        ApiError.Unauthorized -> "Invalid username or password"
+                        else -> failure.error.message
                     }
-                    sendEvent(Event.Toast(failure.error.message))
+
+                    _state.update {
+                        it.copy(error = userMessage)
+                    }
+                    sendEvent(Event.Toast(userMessage))
                 }
             }
 

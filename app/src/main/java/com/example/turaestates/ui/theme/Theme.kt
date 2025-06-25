@@ -23,8 +23,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
+    primary = Yellowish,
+    secondary = Greeny,
     tertiary = Pink80,
     // Define explicit background/surface for components on the gradient
     background = Color(0xFF1C1B1F), // Example: A very dark gray
@@ -39,8 +39,8 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
+    primary = Greeny,
+    secondary = Yellowish,
     tertiary = Pink40,
 
     // Define explicit background/surface for components on the gradient

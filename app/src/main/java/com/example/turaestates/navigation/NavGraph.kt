@@ -26,6 +26,12 @@ fun SetupNavGraph(
             SigninScreen(navController = navController)
         }
 
+        composable(Screen.SignUp.route) {
+            SignupNavGraph(
+                parentNavController = navController
+            ) // nested graph here
+        }
+
         composable(route = Screen.Home.route) {
             HomeScreen()
         }

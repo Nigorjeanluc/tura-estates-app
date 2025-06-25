@@ -1,7 +1,7 @@
 package com.example.turaestates.auth.signin.data.repository
 
 import arrow.core.Either
-import com.example.turaestates.auth.signin.data.mapper.toNetworkError
+import com.example.turaestates.auth.signin.data.mapper.toSigninNetworkError
 import com.example.turaestates.auth.signin.data.remote.SigninApi
 import com.example.turaestates.auth.signin.data.remote.SigninRequest
 import com.example.turaestates.auth.signin.domain.model.SigninNetworkError
@@ -25,7 +25,7 @@ class SigninRepositoryImpl @Inject constructor(
                 )
             )
         }.mapLeft {
-            it.toNetworkError()
+            it.toSigninNetworkError()
         }
     }
 }
