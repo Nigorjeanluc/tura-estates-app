@@ -3,9 +3,14 @@ package com.example.turaestates.auth.signup.presentation
 import android.util.Log
 import java.util.Calendar
 import android.app.DatePickerDialog
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -214,6 +219,7 @@ fun SignupStep1Screen(
 @Composable
 fun SignupStep2Screen(
     navController: NavController,
+    parentNavController: NavController,
     viewModel: SignupViewModel = hiltViewModel(),
     onSignupComplete: () -> Unit
 ) {
@@ -314,6 +320,25 @@ fun SignupStep2Screen(
             Text("Submit")
         }
 
+
+
+        Text(
+            buildAnnotatedString {
+                append("Already have an account?")
+                withStyle(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                    )
+                ) {
+                    append(" Sign In")
+                }
+            },
+            modifier = Modifier.clickable {
+                parentNavController.navigate(Screen.SignIn.route)
+            }
+        )
+
         if (state.navigateToHome) {
             LaunchedEffect(Unit) {
                 onSignupComplete()
@@ -329,7 +354,7 @@ fun DateOfBirthPicker(
     onDobSelected: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val calendar = remember { Calendar.getInstance() }
+    val calendar = Calendar.getInstance()
 
     val datePickerDialog = remember {
         DatePickerDialog(
@@ -344,19 +369,33 @@ fun DateOfBirthPicker(
         )
     }
 
-    OutlinedTextField(
-        value = dob,
-        onValueChange = {}, // Read-only
-        label = { Text("Date of Birth") },
-        readOnly = true,
+    // Custom text field look-alike
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { datePickerDialog.show() },
-        leadingIcon = {
-            Icon(Icons.Default.CalendarToday, contentDescription = "Pick Date")
-        }
-    )
+            .border(
+                BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                shape = MaterialTheme.shapes.small
+            )
+            .clickable { datePickerDialog.show() }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Default.CalendarToday,
+            contentDescription = "Date Icon",
+            modifier = Modifier.padding(end = 12.dp)
+        )
+        Text(
+            text = if (dob.isNotEmpty()) dob else "Select your birth date",
+            style = MaterialTheme.typography.bodyLarge,
+            color = if (dob.isNotEmpty()) MaterialTheme.colorScheme.onSurface else Color.Gray
+        )
+    }
 }
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

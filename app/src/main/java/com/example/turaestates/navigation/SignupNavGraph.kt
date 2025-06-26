@@ -31,7 +31,8 @@ fun SignupNavGraph(parentNavController: NavHostController) {
                     parentNavController.navigate(Screen.Home.route) {
                         popUpTo(Screen.SignUp.route) { inclusive = true }
                     }
-                }
+                },
+                parentNavController = parentNavController
             )
         }
     }
