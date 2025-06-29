@@ -58,6 +58,7 @@ import com.example.turaestates.auth.signin.presentation.components.SocialLoginBu
 import com.example.turaestates.auth.signup.data.remote.SignupRequest
 import com.example.turaestates.auth.signup.domain.model.SignupNetworkError
 import com.example.turaestates.navigation.Screen
+import com.example.turaestates.util.TokenManager
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
@@ -230,6 +231,7 @@ fun SignupStep2Screen(
     viewModel: SignupViewModel,
     onSignupComplete: () -> Unit,
 ) {
+    val context = LocalContext.current
     val form by viewModel.form.observeAsState(SignupRequest())
     val state by viewModel.state.observeAsState(SignupViewState())
 
@@ -317,6 +319,7 @@ fun SignupStep2Screen(
 
     if (state.navigateToHome) {
         LaunchedEffect(Unit) {
+            TokenManager.saveToken(context, state.signupResponse?.token.toString())
             onSignupComplete()
             viewModel.onNavigated()
         }
