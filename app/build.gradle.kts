@@ -70,6 +70,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Live data
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.0")
+
     // Splash API
     implementation("androidx.core:core-splashscreen:1.0.1")
 

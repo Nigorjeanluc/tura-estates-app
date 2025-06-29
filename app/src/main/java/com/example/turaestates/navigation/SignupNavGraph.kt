@@ -1,17 +1,21 @@
 package com.example.turaestates.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.turaestates.auth.signup.presentation.SignupStep1Screen
 import com.example.turaestates.auth.signup.presentation.SignupStep2Screen
+import com.example.turaestates.auth.signup.presentation.SignupViewModel
 
 
 @Composable
 fun SignupNavGraph(parentNavController: NavHostController) {
     val localNavController = rememberNavController()
+
+    val signupViewModel: SignupViewModel = hiltViewModel()
 
     NavHost(
         navController = localNavController,
@@ -20,7 +24,8 @@ fun SignupNavGraph(parentNavController: NavHostController) {
         composable("signup_step1") {
             SignupStep1Screen(
                 navController = localNavController,
-                parentNavController = parentNavController
+                parentNavController = parentNavController,
+                viewModel = signupViewModel
             )
         }
         composable("signup_step2") {
@@ -32,7 +37,8 @@ fun SignupNavGraph(parentNavController: NavHostController) {
                         popUpTo(Screen.SignUp.route) { inclusive = true }
                     }
                 },
-                parentNavController = parentNavController
+                parentNavController = parentNavController,
+                viewModel = signupViewModel
             )
         }
     }

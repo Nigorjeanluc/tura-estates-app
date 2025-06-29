@@ -1,7 +1,7 @@
 package com.example.turaestates.auth.signup.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
 import arrow.core.Either
 import com.example.turaestates.auth.signup.data.remote.SignupRequest
 import com.example.turaestates.auth.signup.domain.model.ApiError
@@ -11,9 +11,6 @@ import com.example.turaestates.auth.signup.domain.repository.SignupRepository
 import com.example.turaestates.util.Event
 import com.example.turaestates.util.EventBus.sendEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,51 +19,89 @@ class SignupViewModel @Inject constructor(
     private val signupRepository: SignupRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SignupViewState())
-    val state = _state.asStateFlow()
+    private val _email = MutableLiveData("")
+    val email: LiveData<String> = _email
 
-    // Hold form data between screens
-    private val _form = MutableStateFlow(SignupRequest())
-    val form = _form.asStateFlow()
+    private val _password = MutableLiveData("")
+    val password: LiveData<String> = _password
+
+    private val _form = MutableLiveData(SignupRequest())
+    val form: LiveData<SignupRequest> = _form
+
+    private val _state = MutableLiveData(SignupViewState())
+    val state: LiveData<SignupViewState> = _state
+
+    // Mutable state holding current signup error
+    private val _signupError = MutableLiveData<SignupNetworkError?>(null)
+    val signupError: LiveData<SignupNetworkError?> = _signupError
+
+    // Call this to update errors when signup fails
+    fun setSignupError(error: SignupNetworkError?) {
+        _signupError.value = error
+    }
+
+    // Clear error when needed
+    fun clearError() {
+        _signupError.value = null
+    }
+
+    fun updateEmail(newEmail: String) {
+        _email.value = newEmail
+    }
+
+    fun updatePassword(newPassword: String) {
+        _password.value = newPassword
+    }
 
     fun updateForm(update: SignupRequest.() -> SignupRequest) {
-        _form.update { it.update() }
+        val current = _form.value ?: SignupRequest()
+        _form.value = current.update()
     }
 
     fun signup() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(isLoading = true, error = null)
-            }
+            _state.value = _state.value?.copy(isLoading = true, error = null)
 
-            val result: Either<SignupNetworkError, SignupResponse> =
-                signupRepository.signup(_form.value)
+            val currentForm = (_form.value ?: SignupRequest()).copy(
+                email = _email.value ?: "",
+                password = _password.value ?: ""
+            )
+
+            val result: Either<SignupNetworkError, SignupResponse> = signupRepository.signup(currentForm)
 
             when (result) {
                 is Either.Right -> {
                     val response = result.value
-                    _state.update {
-                        it.copy(signupResponse = response, navigateToHome = true)
-                    }
+                    _state.value = _state.value?.copy(signupResponse = response, navigateToHome = true)
+                    clearError()
                 }
-
                 is Either.Left -> {
                     val failure = result.value
-                    val userMessage = when (failure.error) {
-                        ApiError.Unauthorized -> "Invalid signup details"
-                        else -> failure.error.message
+                    setSignupError(failure)  // Expose the error for UI
+
+                    val userMessage = when (failure) {
+                        is SignupNetworkError.ValidationError -> failure.messages.joinToString("\n")
+                        is SignupNetworkError.GeneralError -> when (failure.type) {
+                            ApiError.Unauthorized -> "Invalid signup details"
+                            else -> failure.type.message
+                        }
                     }
 
-                    _state.update { it.copy(error = userMessage) }
+                    _state.value = _state.value?.copy(error = userMessage)
                     sendEvent(Event.Toast(userMessage))
                 }
             }
 
-            _state.update { it.copy(isLoading = false) }
+            _state.value = _state.value?.copy(isLoading = false)
         }
     }
 
     fun onNavigated() {
-        _state.update { it.copy(navigateToHome = false) }
+        _state.value = _state.value?.copy(navigateToHome = false)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // Remove the observer cleanup since we're not using observers anymore
     }
 }

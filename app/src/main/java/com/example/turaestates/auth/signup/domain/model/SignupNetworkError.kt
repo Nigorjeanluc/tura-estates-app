@@ -1,9 +1,17 @@
 package com.example.turaestates.auth.signup.domain.model
 
-data class SignupNetworkError (
-    val error: ApiError,
-    val t: Throwable? = null
-)
+sealed class SignupNetworkError {
+    data class ValidationError(
+        val messages: List<String>,
+        val error: String,
+        val statusCode: Int
+    ) : SignupNetworkError()
+
+    data class GeneralError(
+        val type: ApiError,
+        val t: Throwable? = null
+    ) : SignupNetworkError()
+}
 
 enum class ApiError(val message: String) {
     NetworkError("Network Error"),
