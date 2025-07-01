@@ -1,5 +1,7 @@
 package com.example.turaestates.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -11,6 +13,7 @@ import com.example.turaestates.auth.signup.presentation.SignupStep2Screen
 import com.example.turaestates.auth.signup.presentation.SignupViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SignupNavGraph(parentNavController: NavHostController) {
     val localNavController = rememberNavController()

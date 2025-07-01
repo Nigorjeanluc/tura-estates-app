@@ -59,10 +59,7 @@ import com.example.turaestates.auth.signup.data.remote.SignupRequest
 import com.example.turaestates.auth.signup.domain.model.SignupNetworkError
 import com.example.turaestates.navigation.Screen
 import com.example.turaestates.util.TokenManager
-import java.time.Instant
 import java.time.LocalDate
-import java.time.Period
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 

@@ -1,13 +1,16 @@
 package com.example.turaestates.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.turaestates.auth.signin.presentation.SigninScreen
-import com.example.turaestates.screen.HomeScreen
+import com.example.turaestates.screen.MainScreen
 import com.example.turaestates.screen.WelcomeScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
@@ -33,7 +36,9 @@ fun SetupNavGraph(
         }
 
         composable(route = Screen.Home.route) {
-            HomeScreen()
+            MainScreen(
+                navController = navController
+            )
         }
     }
 }

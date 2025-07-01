@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.turaestates.auth.signin.data.remote.SigninApi
 import com.example.turaestates.auth.signup.data.remote.SignupApi
 import com.example.turaestates.data.DataStoreRepository
+import com.example.turaestates.properties.data.remote.PropertiesApi
 import com.example.turaestates.util.Constant.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -42,5 +43,15 @@ object MainModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(SignupApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePropertiesApi(): PropertiesApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(PropertiesApi::class.java)
     }
 }
